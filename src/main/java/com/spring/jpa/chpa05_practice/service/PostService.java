@@ -36,7 +36,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(
                 page.getPage()-1,
                 page.getSize(),
-                Sort.by("CreatedDate").descending()
+                Sort.by("CreateDate").descending()
         );
         // 데이터베이스에서 게시물 목록 조회                        
         Page<Post> posts = pr.findAll(pageable);
@@ -45,13 +45,6 @@ public class PostService {
         // 게시물 정보만 꺼내기
         List<Post> postList = posts.getContent();
 
-//        for(Post post : postList){
-//            PostDetailResponseDTO d = new PostDetailResponseDTO();
-//            d.setTitle(post.getTitle());
-//            d.setAuthor(post.getWriter());
-//            d.setContent(post.getContent());
-//            d.setRegDate(post.getCreateDate());
-//        }
         //엔터티 객체를 DTO 객체로 변환한 결과 리스트
         List<PostDetailResponseDTO> detailList
         = postList.stream()
@@ -61,12 +54,11 @@ public class PostService {
 
 
         // DB에서 조회한 정보(ENTITY)를 JSON형태에 맞는 DTO로 변환
-        PostListResponseDTO responseDTO = PostListResponseDTO.builder()
+        return PostListResponseDTO.builder()
                 .count(detailList.size()) // 총 게시물 수가 아니라 조회된게시물 수
-                .pageInfo(new PageResponseDTO(posts)) //생성자에게 Page정보가 담긴 개겣를 그대로 전달
+                .pageInfo(new PageResponseDTO(posts)) //생성자에게 Page정보가 담긴 객체를 그대로 전달
                 .posts(detailList)
                 .build();
-        return responseDTO;
     }
 
 }
