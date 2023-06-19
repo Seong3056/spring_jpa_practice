@@ -1,10 +1,17 @@
 package com.spring.jpa.chpa05_practice.api;
 
+import com.spring.jpa.chpa05_practice.dto.PageDTO;
+import com.spring.jpa.chpa05_practice.dto.PostListResponseDTO;
+import com.spring.jpa.chpa05_practice.entity.Post;
 import com.spring.jpa.chpa05_practice.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -22,4 +29,14 @@ public class PostApiController {
      */
 
     private final PostService ps;
+
+    @GetMapping
+    public ResponseEntity<?> list(PageDTO pageDTO){
+        log.info("/api/v1/posts?page={}&size={}",pageDTO.getPage(),pageDTO.getSize());
+        PostListResponseDTO dto = ps.getPosts(pageDTO);
+        return ResponseEntity
+                .ok() //200
+                .body(dto);
+    }
+
 }
